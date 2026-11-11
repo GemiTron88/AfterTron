@@ -31,6 +31,7 @@
 
 #![deny(clippy::unwrap_used, clippy::expect_used, clippy::panic, clippy::unimplemented, clippy::todo, clippy::unreachable)]
 
+pub mod aepx;
 mod export;
 mod import;
 #[cfg(test)]
@@ -146,6 +147,7 @@ impl TimelineFormat {
             filmcraft_interchange::Format::Edl => TimelineFormat::Edl,
             filmcraft_interchange::Format::Aaf => TimelineFormat::Aaf,
             filmcraft_interchange::Format::Omf => TimelineFormat::Omf,
+            filmcraft_interchange::Format::Prproj => TimelineFormat::Fcp7Xml,
         }
     }
 }

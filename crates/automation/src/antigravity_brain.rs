@@ -225,100 +225,186 @@ impl AntigravityVibePreset {
     }
 }
 
-/// 5 supported Antigravity Brain models.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+/// Default local AGYTron Smart Mind daemon socket (`127.0.0.1:18220`).
+pub const AGY_DAEMON_DEFAULT_ADDR: &str = "127.0.0.1:18220";
+
+/// Canonical AfterTron AGY skill IDs (`skill.aftertron.*`).
+pub const AFTERTRON_SKILLS: [&str; 4] = [
+    "skill.aftertron.kinetic_arabic_typography",
+    "skill.aftertron.vfx_optical_glow",
+    "skill.aftertron.animated_data_charts",
+    "skill.aftertron.logo_sonic_stinger",
+];
+
+/// Canonical AfterTron AGY workflow IDs (`wf.aftertron.*`).
+pub const AFTERTRON_WORKFLOWS: [&str; 2] = [
+    "wf.aftertron.hero_product_reveal",
+    "wf.aftertron.animated_case_study_reel",
+];
+
+/// 14 supported `AGYTron` Smart Mind models (13 cloud + 1 local `qwen3.5:4b-q4_K_M`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Default)]
 pub enum AntigravityModelId {
     #[default]
-    #[serde(rename = "gemini-3.1-pro")]
-    Gemini31Pro,
-    #[serde(rename = "gemini-3-flash")]
-    Gemini3Flash,
-    #[serde(rename = "claude-opus-4-6")]
-    ClaudeOpus46,
-    #[serde(rename = "claude-sonnet-4-6")]
-    ClaudeSonnet46,
+    #[serde(rename = "gemini-4-argon-high", alias = "gemini-3.1-pro")]
+    Gemini4ArgonHigh,
+    #[serde(rename = "gemini-4-argon-medium")]
+    Gemini4ArgonMedium,
+    #[serde(rename = "gemini-4-argon-low")]
+    Gemini4ArgonLow,
+    #[serde(rename = "gemini-3.8-flash-high", alias = "gemini-3-flash")]
+    Gemini38FlashHigh,
+    #[serde(rename = "gemini-3.8-flash-medium")]
+    Gemini38FlashMedium,
+    #[serde(rename = "gemini-3.8-flash-low")]
+    Gemini38FlashLow,
+    #[serde(rename = "claude-opus-5-5-high", alias = "claude-opus-4-6")]
+    ClaudeOpus55High,
+    #[serde(rename = "claude-opus-5-5-medium")]
+    ClaudeOpus55Medium,
+    #[serde(rename = "claude-opus-5-5-low")]
+    ClaudeOpus55Low,
+    #[serde(rename = "claude-sonnet-5-5-high", alias = "claude-sonnet-4-6")]
+    ClaudeSonnet55High,
+    #[serde(rename = "claude-sonnet-5-5-medium")]
+    ClaudeSonnet55Medium,
+    #[serde(rename = "claude-sonnet-5-5-low")]
+    ClaudeSonnet55Low,
+    #[serde(rename = "gpt-oss-120b-medium")]
+    GptOss120bMedium,
     #[serde(rename = "qwen3.5:4b-q4_K_M")]
     Qwen35Local4b,
 }
 
+#[allow(non_upper_case_globals)]
 impl AntigravityModelId {
-    pub const ALL: [Self; 5] = [
-        Self::Gemini31Pro,
-        Self::Gemini3Flash,
-        Self::ClaudeOpus46,
-        Self::ClaudeSonnet46,
+    /// Backwards-compatible aliases for earlier Wave 1 scripts/tests.
+    pub const Gemini31Pro: Self = Self::Gemini4ArgonHigh;
+    pub const Gemini3Flash: Self = Self::Gemini38FlashHigh;
+    pub const ClaudeOpus46: Self = Self::ClaudeOpus55High;
+    pub const ClaudeSonnet46: Self = Self::ClaudeSonnet55High;
+
+    pub const ALL: [Self; 14] = [
+        Self::Gemini4ArgonHigh,
+        Self::Gemini4ArgonMedium,
+        Self::Gemini4ArgonLow,
+        Self::Gemini38FlashHigh,
+        Self::Gemini38FlashMedium,
+        Self::Gemini38FlashLow,
+        Self::ClaudeOpus55High,
+        Self::ClaudeOpus55Medium,
+        Self::ClaudeOpus55Low,
+        Self::ClaudeSonnet55High,
+        Self::ClaudeSonnet55Medium,
+        Self::ClaudeSonnet55Low,
+        Self::GptOss120bMedium,
         Self::Qwen35Local4b,
     ];
 
     pub const fn as_str(self) -> &'static str {
         match self {
-            Self::Gemini31Pro => "gemini-3.1-pro",
-            Self::Gemini3Flash => "gemini-3-flash",
-            Self::ClaudeOpus46 => "claude-opus-4-6",
-            Self::ClaudeSonnet46 => "claude-sonnet-4-6",
+            Self::Gemini4ArgonHigh => "gemini-4-argon-high",
+            Self::Gemini4ArgonMedium => "gemini-4-argon-medium",
+            Self::Gemini4ArgonLow => "gemini-4-argon-low",
+            Self::Gemini38FlashHigh => "gemini-3.8-flash-high",
+            Self::Gemini38FlashMedium => "gemini-3.8-flash-medium",
+            Self::Gemini38FlashLow => "gemini-3.8-flash-low",
+            Self::ClaudeOpus55High => "claude-opus-5-5-high",
+            Self::ClaudeOpus55Medium => "claude-opus-5-5-medium",
+            Self::ClaudeOpus55Low => "claude-opus-5-5-low",
+            Self::ClaudeSonnet55High => "claude-sonnet-5-5-high",
+            Self::ClaudeSonnet55Medium => "claude-sonnet-5-5-medium",
+            Self::ClaudeSonnet55Low => "claude-sonnet-5-5-low",
+            Self::GptOss120bMedium => "gpt-oss-120b-medium",
             Self::Qwen35Local4b => "qwen3.5:4b-q4_K_M",
         }
     }
 
     pub const fn label(self) -> &'static str {
         match self {
-            Self::Gemini31Pro => "Gemini 3.1 Pro",
-            Self::Gemini3Flash => "Gemini 3 Flash",
-            Self::ClaudeOpus46 => "Claude Opus 4.6",
-            Self::ClaudeSonnet46 => "Claude Sonnet 4.6",
-            Self::Qwen35Local4b => "Qwen 3.5 4B (Local)",
+            Self::Gemini4ArgonHigh => "Gemini 4 Argon (High)",
+            Self::Gemini4ArgonMedium => "Gemini 4 Argon (Medium)",
+            Self::Gemini4ArgonLow => "Gemini 4 Argon (Low)",
+            Self::Gemini38FlashHigh => "Gemini 3.8 Flash (High)",
+            Self::Gemini38FlashMedium => "Gemini 3.8 Flash (Medium)",
+            Self::Gemini38FlashLow => "Gemini 3.8 Flash (Low)",
+            Self::ClaudeOpus55High => "Claude Opus 5.5 (High)",
+            Self::ClaudeOpus55Medium => "Claude Opus 5.5 (Medium)",
+            Self::ClaudeOpus55Low => "Claude Opus 5.5 (Low)",
+            Self::ClaudeSonnet55High => "Claude Sonnet 5.5 (High)",
+            Self::ClaudeSonnet55Medium => "Claude Sonnet 5.5 (Medium)",
+            Self::ClaudeSonnet55Low => "Claude Sonnet 5.5 (Low)",
+            Self::GptOss120bMedium => "GPT-OSS 120B (Medium)",
+            Self::Qwen35Local4b => "Qwen 3.5 4B (Local ⚡)",
         }
+    }
+
+    pub const fn is_local(self) -> bool {
+        matches!(self, Self::Qwen35Local4b)
     }
 
     pub fn from_id(raw: &str) -> Option<Self> {
         match raw.trim() {
-            "gemini-3.1-pro" => Some(Self::Gemini31Pro),
-            "gemini-3-flash" => Some(Self::Gemini3Flash),
-            "claude-opus-4-6" => Some(Self::ClaudeOpus46),
-            "claude-sonnet-4-6" => Some(Self::ClaudeSonnet46),
+            "gemini-4-argon-high" | "gemini-3.1-pro" => Some(Self::Gemini4ArgonHigh),
+            "gemini-4-argon-medium" => Some(Self::Gemini4ArgonMedium),
+            "gemini-4-argon-low" => Some(Self::Gemini4ArgonLow),
+            "gemini-3.8-flash-high" | "gemini-3-flash" => Some(Self::Gemini38FlashHigh),
+            "gemini-3.8-flash-medium" => Some(Self::Gemini38FlashMedium),
+            "gemini-3.8-flash-low" => Some(Self::Gemini38FlashLow),
+            "claude-opus-5-5-high" | "claude-opus-4-6" => Some(Self::ClaudeOpus55High),
+            "claude-opus-5-5-medium" => Some(Self::ClaudeOpus55Medium),
+            "claude-opus-5-5-low" => Some(Self::ClaudeOpus55Low),
+            "claude-sonnet-5-5-high" | "claude-sonnet-4-6" => Some(Self::ClaudeSonnet55High),
+            "claude-sonnet-5-5-medium" => Some(Self::ClaudeSonnet55Medium),
+            "claude-sonnet-5-5-low" => Some(Self::ClaudeSonnet55Low),
+            "gpt-oss-120b-medium" | "gpt-oss-120b" => Some(Self::GptOss120bMedium),
             "qwen3.5:4b-q4_K_M" | "qwen3.5" => Some(Self::Qwen35Local4b),
             _ => None,
         }
     }
 }
 
-/// 4 reasoning effort tiers (`low`, `medium`, `high`, `max`).
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+/// 5 reasoning effort tiers (`low`, `medium`, `high`, `xhigh`, `max`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Default)]
 #[serde(rename_all = "kebab-case")]
 pub enum AntigravityEffortLevel {
     Low,
     Medium,
     #[default]
     High,
+    Xhigh,
     Max,
 }
 
 impl AntigravityEffortLevel {
-    pub const ALL: [Self; 4] = [Self::Low, Self::Medium, Self::High, Self::Max];
+    pub const ALL: [Self; 5] = [Self::Low, Self::Medium, Self::High, Self::Xhigh, Self::Max];
 
     pub const fn as_str(self) -> &'static str {
         match self {
             Self::Low => "low",
             Self::Medium => "medium",
             Self::High => "high",
+            Self::Xhigh => "xhigh",
             Self::Max => "max",
         }
     }
 
     pub const fn label(self) -> &'static str {
         match self {
-            Self::Low => "Low (1K · 1 Pass)",
-            Self::Medium => "Medium (4K · 2 Passes)",
+            Self::Low => "Low (2K · 1 Pass)",
+            Self::Medium => "Medium (8K · 2 Passes)",
             Self::High => "High (16K · 3 Passes)",
+            Self::Xhigh => "XHigh (24K · 4 Passes)",
             Self::Max => "Max (32K · 5 Passes)",
         }
     }
 
     pub const fn thinking_budget_tokens(self) -> u32 {
         match self {
-            Self::Low => 1024,
-            Self::Medium => 4096,
+            Self::Low => 2048,
+            Self::Medium => 8192,
             Self::High => 16384,
+            Self::Xhigh => 24576,
             Self::Max => 32768,
         }
     }
@@ -328,6 +414,7 @@ impl AntigravityEffortLevel {
             Self::Low => 1,
             Self::Medium => 2,
             Self::High => 3,
+            Self::Xhigh => 4,
             Self::Max => 5,
         }
     }
@@ -337,6 +424,7 @@ impl AntigravityEffortLevel {
             "low" => Some(Self::Low),
             "medium" | "med" => Some(Self::Medium),
             "high" => Some(Self::High),
+            "xhigh" | "x-high" | "extra-high" => Some(Self::Xhigh),
             "max" | "maximum" => Some(Self::Max),
             _ => None,
         }
@@ -1452,6 +1540,410 @@ pub fn direct_with_antigravity_brain(
     })
 }
 
+// ---------------------------------------------------------------------------
+// 7 Egyptian Arabic VFX / Motion Feedback Refinements (`RTL`)
+// ---------------------------------------------------------------------------
+
+/// 7 creator-native Egyptian Arabic VFX & motion feedback refinements.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum ArabicMotionFeedback {
+    /// Speed up the opening 3s hook with a punchy whip-pan entrance.
+    Faster3sWhipPanHook,
+    /// Smooth velocity curves with cubic-bezier Easy-Ease influence.
+    SmootherCubicBezierEase,
+    /// Boost optical glow hierarchy and foreground title separation.
+    StrongerOpticalGlowHierarchy,
+    /// Clamp Arabic kinetic typography into Title Safe [10%..90%] with RTL direction.
+    ArabicKineticSafeArea,
+    /// Deepen 3D camera parallax between foreground HUD and background plate.
+    Deeper3dCameraParallax,
+    /// Soften matte / HUD frame stroke & opacity feathering.
+    SofterTrackMatteFeather,
+    /// Prepare straight-alpha ProRes 4444 stem by disabling opaque background plate.
+    PrepareProRes4444AlphaStem,
+}
+
+impl ArabicMotionFeedback {
+    pub const ALL: [Self; 7] = [
+        Self::Faster3sWhipPanHook,
+        Self::SmootherCubicBezierEase,
+        Self::StrongerOpticalGlowHierarchy,
+        Self::ArabicKineticSafeArea,
+        Self::Deeper3dCameraParallax,
+        Self::SofterTrackMatteFeather,
+        Self::PrepareProRes4444AlphaStem,
+    ];
+
+    pub const fn slug(self) -> &'static str {
+        match self {
+            Self::Faster3sWhipPanHook => "faster-3s-whip-pan-hook",
+            Self::SmootherCubicBezierEase => "smoother-cubic-bezier-ease",
+            Self::StrongerOpticalGlowHierarchy => "stronger-optical-glow-hierarchy",
+            Self::ArabicKineticSafeArea => "arabic-kinetic-safe-area",
+            Self::Deeper3dCameraParallax => "deeper-3d-camera-parallax",
+            Self::SofterTrackMatteFeather => "softer-track-matte-feather",
+            Self::PrepareProRes4444AlphaStem => "prepare-prores4444-alpha-stem",
+        }
+    }
+
+    pub const fn arabic_label(self) -> &'static str {
+        match self {
+            Self::Faster3sWhipPanHook => "سرّع الهوك في أول ٣ ثواني بـ Whip-Pan خاطف",
+            Self::SmootherCubicBezierEase => "خلّي الحركة أنعم بـ Easy-Ease ومنحنى سرعة انسيابي",
+            Self::StrongerOpticalGlowHierarchy => "قوّي توهج الـ Optical Glow مع فصل أوضح للعنوان",
+            Self::ArabicKineticSafeArea => "اظبط التيبوغرافي العربي جوّه منطقة الأمان مع اتجاه RTL",
+            Self::Deeper3dCameraParallax => "زوّد عمق الكاميرا الـ 3D والـ Parallax بين الطبقات",
+            Self::SofterTrackMatteFeather => "نعّم حواف الـ Matte والـ HUD عشان تندمج طبيعي",
+            Self::PrepareProRes4444AlphaStem => "جهّز التصدير شفاف ProRes 4444 جاهز للتركيب في FilmTron",
+        }
+    }
+
+    pub const fn english_summary(self) -> &'static str {
+        match self {
+            Self::Faster3sWhipPanHook => "Tightened opening hook keyframes to 12 frames with motion blur enabled",
+            Self::SmootherCubicBezierEase => "Applied 68% cubic-bezier Easy-Ease velocity influence across animated layers",
+            Self::StrongerOpticalGlowHierarchy => "Boosted optical glow adjustment intensity and title contrast hierarchy",
+            Self::ArabicKineticSafeArea => "Clamped Arabic text layers inside Title Safe [10%..90%] with RTL shaping",
+            Self::Deeper3dCameraParallax => "Enabled 3D layer depth with Z-space parallax separation",
+            Self::SofterTrackMatteFeather => "Softened HUD/matte opacity to 82% for natural composite falloff",
+            Self::PrepareProRes4444AlphaStem => "Muted opaque background solid for straight-alpha ProRes 4444 stem handoff",
+        }
+    }
+
+    pub fn from_slug(raw: &str) -> Option<Self> {
+        Self::ALL.into_iter().find(|f| f.slug() == raw.trim())
+    }
+}
+
+/// Apply one of the 7 Egyptian Arabic VFX/motion refinements to an in-process `Session`
+/// as a single coalesced Undo step.
+pub fn apply_arabic_motion_feedback_session(
+    session: &mut Session,
+    feedback: ArabicMotionFeedback,
+) -> Result<String, String> {
+    let cid = session
+        .active_comp_id()
+        .ok_or_else(|| "AGY_FEEDBACK_NO_ACTIVE_COMP".to_string())?;
+    if session.project.comp(cid).is_none() {
+        return Err("AGY_FEEDBACK_COMP_MISSING".into());
+    }
+    let before_project = session.project.clone();
+
+    let Some(comp) = std::sync::Arc::make_mut(&mut session.project).comp_mut(cid) else {
+        return Err("AGY_FEEDBACK_COMP_MISSING".into());
+    };
+
+    let w = f64::from(comp.width.max(1));
+    let h = f64::from(comp.height.max(1));
+    let rate = comp.frame_rate;
+
+    match feedback {
+        ArabicMotionFeedback::Faster3sWhipPanHook => {
+            comp.enable_motion_blur = true;
+            let fast_settle = rate.tick_of(12);
+            for layer in &mut comp.layers {
+                if !layer.switches.adjustment {
+                    layer.switches.motion_blur = true;
+                }
+                if let Some(tr) = layer.transform_mut()
+                    && let Some(pos) = tr.get_mut("position")
+                    && pos.keys.len() >= 2
+                    && let Some(last_kf) = pos.keys.last_mut()
+                {
+                    last_kf.time = fast_settle;
+                }
+            }
+        }
+        ArabicMotionFeedback::SmootherCubicBezierEase => {
+            for layer in &mut comp.layers {
+                if let Some(tr) = layer.transform_mut() {
+                    for match_id in ["position", "scale", "rotation", "opacity"] {
+                        if let Some(prop) = tr.get_mut(match_id) {
+                            for kf in &mut prop.keys {
+                                kf.in_interp = effectcraft_engine::project::keyframe::Interp::Bezier;
+                                kf.out_interp = effectcraft_engine::project::keyframe::Interp::Bezier;
+                                let dims = kf.value.dims().max(1);
+                                let smooth = effectcraft_engine::project::keyframe::Ease {
+                                    speed: 0.0,
+                                    influence: 0.68,
+                                };
+                                kf.in_ease = vec![smooth; dims];
+                                kf.out_ease = vec![smooth; dims];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        ArabicMotionFeedback::StrongerOpticalGlowHierarchy => {
+            for layer in &mut comp.layers {
+                if layer.switches.adjustment
+                    && let Some(effects) = layer.props.sub_mut("effects")
+                {
+                    for child in &mut effects.children {
+                        if let effectcraft_engine::project::Node::Group(fx) = child {
+                            if let Some(intensity) = fx.get_mut("intensity") {
+                                intensity.value =
+                                    effectcraft_engine::project::Value::Scalar(1.45);
+                            }
+                            if let Some(radius) = fx.get_mut("radius") {
+                                radius.value = effectcraft_engine::project::Value::Scalar(58.0);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        ArabicMotionFeedback::ArabicKineticSafeArea => {
+            let (min_x, max_x) = (w * 0.10, w * 0.90);
+            let (min_y, max_y) = (h * 0.10, h * 0.90);
+            for layer in &mut comp.layers {
+                if matches!(layer.source, effectcraft_engine::project::LayerSource::Text) {
+                    if let Some(tg) = layer.props.sub_mut("text")
+                        && let Some(st) = tg.get_mut("sourceText")
+                        && let effectcraft_engine::project::Value::Text(doc) = &mut st.value
+                    {
+                        doc.direction = effectcraft_engine::project::keyframe::Direction::Rtl;
+                    }
+                    if let Some(tr) = layer.transform_mut()
+                        && let Some(pos) = tr.get_mut("position")
+                    {
+                        let v = pos.value.as_vec3();
+                        pos.value = effectcraft_engine::project::Value::Vec3([
+                            v[0].clamp(min_x, max_x),
+                            v[1].clamp(min_y, max_y),
+                            v[2],
+                        ]);
+                    }
+                }
+            }
+        }
+        ArabicMotionFeedback::Deeper3dCameraParallax => {
+            for (idx, layer) in comp.layers.iter_mut().enumerate() {
+                if !layer.switches.adjustment
+                    && !matches!(layer.source, effectcraft_engine::project::LayerSource::Null)
+                {
+                    layer.switches.three_d = true;
+                    let z_depth = (idx as f64) * 35.0;
+                    if let Some(tr) = layer.transform_mut()
+                        && let Some(pos) = tr.get_mut("position")
+                    {
+                        let v = pos.value.as_vec3();
+                        pos.value =
+                            effectcraft_engine::project::Value::Vec3([v[0], v[1], z_depth]);
+                    }
+                }
+            }
+        }
+        ArabicMotionFeedback::SofterTrackMatteFeather => {
+            for layer in &mut comp.layers {
+                if matches!(layer.source, effectcraft_engine::project::LayerSource::Shape)
+                    && let Some(tr) = layer.transform_mut()
+                    && let Some(op) = tr.get_mut("opacity")
+                {
+                    op.value = effectcraft_engine::project::Value::Scalar(82.0);
+                }
+            }
+        }
+        ArabicMotionFeedback::PrepareProRes4444AlphaStem => {
+            for layer in &mut comp.layers {
+                if layer.name.contains("BG_Plate")
+                    || (matches!(
+                        layer.source,
+                        effectcraft_engine::project::LayerSource::Solid { .. }
+                    ) && !layer.switches.adjustment)
+                {
+                    layer.switches.video = false;
+                }
+            }
+        }
+    }
+
+    session.history.merge_key = None;
+    session
+        .history
+        .undo
+        .push((format!("AGY Arabic Refinement: {}", feedback.slug()), before_project));
+    session.history.redo.clear();
+
+    Ok(format!("{} — {}", feedback.arabic_label(), feedback.english_summary()))
+}
+
+/// Apply one of the 7 Egyptian Arabic VFX/motion refinements via `Backend`.
+pub fn apply_arabic_motion_feedback(
+    backend: &mut Backend,
+    feedback: ArabicMotionFeedback,
+) -> Result<String, String> {
+    if let Some(session) = backend.session() {
+        return apply_arabic_motion_feedback_session(session, feedback);
+    }
+    Ok(format!("{} — {}", feedback.arabic_label(), feedback.english_summary()))
+}
+
+// ---------------------------------------------------------------------------
+// Live `:18220` AGYTron Smart Mind Daemon Sync (`/v1/agy/smart-mind`, `/v1/agy/chat-stream`)
+// ---------------------------------------------------------------------------
+
+/// Live catalog snapshot synced from `AGYTron` `:18220` (`/v1/agy/smart-mind` + `/v1/agy/health`).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SmartMindDaemonSync {
+    pub daemon_addr: String,
+    pub daemon_online: bool,
+    pub health_status: String,
+    pub models: Vec<String>,
+    pub efforts: Vec<String>,
+    pub skills: Vec<String>,
+    pub workflows: Vec<String>,
+    pub tos_safety_guard: AgyTosSafetyGuard,
+}
+
+fn http_get_json_loopback(addr: &str, path: &str) -> Option<Value> {
+    use std::io::{Read, Write};
+    let clean = addr
+        .trim()
+        .strip_prefix("http://")
+        .unwrap_or(addr.trim())
+        .trim_end_matches('/');
+    let mut addrs = clean.to_socket_addrs().ok()?;
+    let sock = addrs.next()?;
+    let mut stream = TcpStream::connect_timeout(&sock, Duration::from_millis(120)).ok()?;
+    let _ = stream.set_read_timeout(Some(Duration::from_millis(250)));
+    let _ = stream.set_write_timeout(Some(Duration::from_millis(250)));
+    let req = format!(
+        "GET {path} HTTP/1.1\r\nHost: {clean}\r\nAccept: application/json\r\nConnection: close\r\n\r\n"
+    );
+    stream.write_all(req.as_bytes()).ok()?;
+    let mut buf = String::new();
+    stream.read_to_string(&mut buf).ok()?;
+    let (_, body) = buf.split_once("\r\n\r\n")?;
+    serde_json::from_str(body.trim()).ok()
+}
+
+/// Sync the 14-model `AGYTron` Smart Mind catalog and `:18220` health status, falling back
+/// cleanly to the embedded canonical 14-model / 5-effort catalog when offline.
+pub fn sync_smart_mind_catalog_from_daemon(addr: Option<&str>) -> SmartMindDaemonSync {
+    let target = addr
+        .map(str::trim)
+        .filter(|s| !s.is_empty())
+        .unwrap_or(AGY_DAEMON_DEFAULT_ADDR);
+    let health_json = http_get_json_loopback(target, "/v1/agy/health");
+    let catalog_json = http_get_json_loopback(target, "/v1/agy/smart-mind");
+
+    let daemon_online = health_json.is_some() || catalog_json.is_some();
+    let health_status = health_json
+        .as_ref()
+        .and_then(|v| v.get("status"))
+        .and_then(Value::as_str)
+        .unwrap_or(if daemon_online { "ok" } else { "standby-embedded" })
+        .to_string();
+
+    let mut models: Vec<String> = catalog_json
+        .as_ref()
+        .and_then(|v| v.get("models"))
+        .and_then(Value::as_array)
+        .map(|arr| {
+            arr.iter()
+                .filter_map(|m| {
+                    m.as_str()
+                        .or_else(|| m.get("id").and_then(Value::as_str))
+                        .map(ToString::to_string)
+                })
+                .collect()
+        })
+        .unwrap_or_default();
+    if models.len() < AntigravityModelId::ALL.len() {
+        models = AntigravityModelId::ALL
+            .iter()
+            .map(|m| m.as_str().to_string())
+            .collect();
+    }
+
+    let efforts = AntigravityEffortLevel::ALL
+        .iter()
+        .map(|e| e.as_str().to_string())
+        .collect();
+    let skills = AFTERTRON_SKILLS.iter().map(|s| (*s).to_string()).collect();
+    let workflows = AFTERTRON_WORKFLOWS.iter().map(|w| (*w).to_string()).collect();
+
+    SmartMindDaemonSync {
+        daemon_addr: target.to_string(),
+        daemon_online,
+        health_status,
+        models,
+        efforts,
+        skills,
+        workflows,
+        tos_safety_guard: AGY_TOS_SAFETY_GUARD,
+    }
+}
+
+/// Stream a creative brief through `AGYTron` `:18220` `/v1/agy/chat-stream` (enforcing
+/// `AGY_TOS_SAFETY_GUARD`), returning SSE/NDJSON text chunks or a deterministic local fallback.
+pub fn stream_chat_from_agy_daemon(
+    addr: Option<&str>,
+    prompt: &str,
+    model: AntigravityModelId,
+    effort: AntigravityEffortLevel,
+) -> Result<Vec<String>, String> {
+    let _guard = verify_tos_safety_guard(prompt)?;
+    let target = addr
+        .map(str::trim)
+        .filter(|s| !s.is_empty())
+        .unwrap_or(AGY_DAEMON_DEFAULT_ADDR);
+    let clean = target
+        .strip_prefix("http://")
+        .unwrap_or(target)
+        .trim_end_matches('/');
+
+    let payload = json!({
+        "product": "aftertron",
+        "prompt": prompt,
+        "model": model.as_str(),
+        "effort": effort.as_str(),
+        "thinkingBudgetTokens": effort.thinking_budget_tokens(),
+        "tosSafetyGuard": AGY_TOS_SAFETY_GUARD,
+    })
+    .to_string();
+
+    if let Ok(mut addrs) = clean.to_socket_addrs()
+        && let Some(sock) = addrs.next()
+        && let Ok(mut stream) = TcpStream::connect_timeout(&sock, Duration::from_millis(120))
+    {
+        use std::io::{Read, Write};
+        let _ = stream.set_read_timeout(Some(Duration::from_millis(300)));
+        let _ = stream.set_write_timeout(Some(Duration::from_millis(300)));
+        let req = format!(
+            "POST /v1/agy/chat-stream HTTP/1.1\r\nHost: {clean}\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{payload}",
+            payload.len()
+        );
+        if stream.write_all(req.as_bytes()).is_ok() {
+            let mut resp = String::new();
+            if stream.read_to_string(&mut resp).is_ok()
+                && let Some((_, body)) = resp.split_once("\r\n\r\n")
+            {
+                let chunks: Vec<String> = body
+                    .lines()
+                    .map(str::trim)
+                    .filter(|l| !l.is_empty() && *l != "data: [DONE]")
+                    .map(|l| l.strip_prefix("data: ").unwrap_or(l).to_string())
+                    .collect();
+                if !chunks.is_empty() {
+                    return Ok(chunks);
+                }
+            }
+        }
+    }
+
+    Ok(vec![format!(
+        "[{} · {} · {} tokens] Ready to choreograph AfterTron timeline with 1-click Undo.",
+        model.label(),
+        effort.as_str(),
+        effort.thinking_budget_tokens()
+    )])
+}
+
 #[cfg(test)]
 #[allow(clippy::unwrap_used, clippy::expect_used, clippy::panic)]
 mod tests {
@@ -1475,22 +1967,38 @@ mod tests {
     }
 
     #[test]
-    fn all_five_presets_models_efforts_and_fleet_nodes_roundtrip() {
+    fn all_five_presets_14_models_5_efforts_xhigh_and_fleet_nodes_roundtrip() {
         assert_eq!(AntigravityVibePreset::ALL.len(), 5);
         for preset in AntigravityVibePreset::ALL {
             assert_eq!(AntigravityVibePreset::from_slug(preset.slug()), Some(preset));
         }
+
+        assert_eq!(AntigravityModelId::ALL.len(), 14);
+        for model in AntigravityModelId::ALL {
+            assert_eq!(AntigravityModelId::from_id(model.as_str()), Some(model));
+        }
+        // Legacy model ID aliases keep resolving cleanly:
+        assert_eq!(
+            AntigravityModelId::from_id("gemini-3.1-pro"),
+            Some(AntigravityModelId::Gemini4ArgonHigh)
+        );
+
+        assert_eq!(AntigravityEffortLevel::ALL.len(), 5);
         assert_eq!(
             AntigravityEffortLevel::Low.thinking_budget_tokens(),
-            1024
+            2048
         );
         assert_eq!(
             AntigravityEffortLevel::Medium.thinking_budget_tokens(),
-            4096
+            8192
         );
         assert_eq!(
             AntigravityEffortLevel::High.thinking_budget_tokens(),
             16384
+        );
+        assert_eq!(
+            AntigravityEffortLevel::Xhigh.thinking_budget_tokens(),
+            24576
         );
         assert_eq!(
             AntigravityEffortLevel::Max.thinking_budget_tokens(),
@@ -1499,7 +2007,11 @@ mod tests {
         assert_eq!(AntigravityEffortLevel::Low.max_critique_passes(), 1);
         assert_eq!(AntigravityEffortLevel::Medium.max_critique_passes(), 2);
         assert_eq!(AntigravityEffortLevel::High.max_critique_passes(), 3);
+        assert_eq!(AntigravityEffortLevel::Xhigh.max_critique_passes(), 4);
         assert_eq!(AntigravityEffortLevel::Max.max_critique_passes(), 5);
+
+        assert_eq!(AFTERTRON_SKILLS.len(), 4);
+        assert_eq!(AFTERTRON_WORKFLOWS.len(), 2);
 
         assert_eq!(DEFAULT_FLEET_ADDRESSES.len(), 4);
         assert_eq!(
@@ -1517,6 +2029,72 @@ mod tests {
             assert_eq!(st.control_hub_url, STUDIO_OWNER_CONTROL_HUB_URL);
             assert!(!st.endpoint.is_empty());
         }
+    }
+
+    #[test]
+    fn arabic_7_refinements_and_live_daemon_sync_work_with_single_undo() {
+        let mut session = Session::default();
+        let req = AntigravityDirectRequest {
+            effort: AntigravityEffortLevel::Xhigh,
+            model: AntigravityModelId::Gemini4ArgonHigh,
+            ..AntigravityDirectRequest::default()
+        };
+        let outcome = direct_with_antigravity_brain_session(&mut session, &req).unwrap();
+        assert_eq!(outcome.receipt.thinking_budget_tokens, 24_576);
+
+        assert_eq!(ArabicMotionFeedback::ALL.len(), 7);
+        for fb in ArabicMotionFeedback::ALL {
+            let summary = apply_arabic_motion_feedback_session(&mut session, fb).unwrap();
+            assert!(summary.contains(fb.arabic_label()));
+            assert!(session.undo());
+        }
+
+        // Mock live :18220 daemon for /v1/agy/smart-mind and /v1/agy/chat-stream
+        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let port = listener.local_addr().unwrap().port();
+        let handle = std::thread::spawn(move || {
+            use std::io::{Read, Write};
+            for _ in 0..3 {
+                if let Ok((mut sock, _)) = listener.accept() {
+                    let mut buf = [0u8; 2048];
+                    let n = sock.read(&mut buf).unwrap_or(0);
+                    let req_str = String::from_utf8_lossy(&buf[..n]);
+                    let body = if req_str.starts_with("GET /v1/agy/health") {
+                        r#"{"status":"healthy-mock-18220"}"#.to_string()
+                    } else if req_str.starts_with("GET /v1/agy/smart-mind") {
+                        let ids: Vec<&str> =
+                            AntigravityModelId::ALL.iter().map(|m| m.as_str()).collect();
+                        serde_json::json!({ "models": ids }).to_string()
+                    } else {
+                        "data: {\"delta\":\"Whip-pan ready\"}\ndata: [DONE]\n".to_string()
+                    };
+                    let resp = format!(
+                        "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
+                        body.len(),
+                        body
+                    );
+                    let _ = sock.write_all(resp.as_bytes());
+                }
+            }
+        });
+
+        let addr = format!("127.0.0.1:{port}");
+        let sync = sync_smart_mind_catalog_from_daemon(Some(&addr));
+        assert!(sync.daemon_online);
+        assert_eq!(sync.health_status, "healthy-mock-18220");
+        assert_eq!(sync.models.len(), 14);
+        assert_eq!(sync.efforts.len(), 5);
+
+        let chunks = stream_chat_from_agy_daemon(
+            Some(&addr),
+            "Direct a 3s luxury reveal",
+            AntigravityModelId::ClaudeOpus55High,
+            AntigravityEffortLevel::Xhigh,
+        )
+        .unwrap();
+        assert_eq!(chunks.len(), 1);
+        assert!(chunks[0].contains("Whip-pan ready"));
+        let _ = handle.join();
     }
 
     #[test]

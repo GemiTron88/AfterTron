@@ -15,9 +15,10 @@ use serde_json::{Value, json};
 use effectcraft_automation::antigravity_brain::{
     AGY_REMOTE_AGENT_RELAY_URL, AntigravityAuthMode, AntigravityDirectOutcome,
     AntigravityDirectRequest, AntigravityEffortLevel, AntigravityExecutionScope,
-    AntigravityFleetNodeId, AntigravityModelId, AntigravityVibePreset, FleetAddressBook,
-    FleetNodeLiveStatus, STUDIO_OWNER_CONTROL_HUB_URL, direct_with_antigravity_brain_session,
-    probe_fleet_node_live_status,
+    AntigravityFleetNodeId, AntigravityModelId, AntigravityVibePreset, ArabicMotionFeedback,
+    FleetAddressBook, FleetNodeLiveStatus, STUDIO_OWNER_CONTROL_HUB_URL,
+    apply_arabic_motion_feedback_session, direct_with_antigravity_brain_session,
+    probe_fleet_node_live_status, sync_smart_mind_catalog_from_daemon,
 };
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
@@ -25,6 +26,19 @@ pub enum DualBrainMode {
     #[default]
     TronAi,
     AgyAi,
+    GemiAi,
+}
+
+impl DualBrainMode {
+    pub const ALL: [Self; 3] = [Self::TronAi, Self::AgyAi, Self::GemiAi];
+
+    pub const fn label(self) -> &'static str {
+        match self {
+            Self::TronAi => "⚡ TRON AI",
+            Self::AgyAi => "✦ AGY AI",
+            Self::GemiAi => "☁️ GemiAI",
+        }
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -71,6 +85,8 @@ struct ChatState {
     agy_fleet_ips: FleetAddressBook,
     agy_fleet_status: Option<FleetNodeLiveStatus>,
     agy_outcome: Option<AntigravityDirectOutcome>,
+    gemi_preset: String,
+    agy_daemon_sync_badge: String,
 }
 
 impl Default for ChatState {
@@ -113,6 +129,8 @@ impl Default for ChatState {
             agy_fleet_ips: FleetAddressBook::default(),
             agy_fleet_status: None,
             agy_outcome: None,
+            gemi_preset: "inferno".into(),
+            agy_daemon_sync_badge: "Standby · 14 Smart Mind Models".into(),
         }
     }
 }
@@ -614,6 +632,7 @@ fn render_agy_brain_contents(
     pal: InfernoGlassPalette,
     trigger_agy_direct: &mut bool,
     trigger_undo: &mut bool,
+    pending_arabic_feedback: &mut Option<ArabicMotionFeedback>,
 ) {
     // 1. Execution Scope Toggle + 5 Fleet Node Pills + Collapsible 4-Device IP Config & Live Ping
     Frame::new()
@@ -774,26 +793,38 @@ fn render_agy_brain_contents(
             });
 
             ui.add_space(3.0);
-            ui.colored_label(
-                pal.text_secondary,
-                RichText::new("Model (5 Brains):").small().strong(),
-            );
             ui.horizontal_wrapped(|ui| {
-                for model in AntigravityModelId::ALL {
-                    let sel = s.agy_model == model;
-                    if ui
-                        .selectable_label(sel, RichText::new(model.label()).small())
-                        .clicked()
-                    {
-                        s.agy_model = model;
-                    }
+                ui.colored_label(
+                    pal.text_secondary,
+                    RichText::new("Smart Mind Model (14 Brains):").small().strong(),
+                );
+                egui::ComboBox::from_id_salt("aftertron.agy.smart_mind_14")
+                    .selected_text(s.agy_model.label())
+                    .show_ui(ui, |ui| {
+                        for model in AntigravityModelId::ALL {
+                            ui.selectable_value(&mut s.agy_model, model, model.label());
+                        }
+                    });
+                if ui
+                    .button(RichText::new("Sync :18220").small())
+                    .on_hover_text("Sync live /v1/agy/smart-mind + /v1/agy/health")
+                    .clicked()
+                {
+                    let sync = sync_smart_mind_catalog_from_daemon(None);
+                    s.agy_daemon_sync_badge = format!(
+                        "{} · {} models · {}",
+                        if sync.daemon_online { "● :18220 Online" } else { "✦ Standby" },
+                        sync.models.len(),
+                        sync.health_status
+                    );
                 }
+                ui.colored_label(pal.text_muted, RichText::new(&s.agy_daemon_sync_badge).small());
             });
 
             ui.add_space(3.0);
             ui.colored_label(
                 pal.text_secondary,
-                RichText::new("Effort Tier (Thinking Tokens & Critique Passes):")
+                RichText::new("Effort Tier (5 Tiers · XHigh = 24K Tokens / 4 Passes):")
                     .small()
                     .strong(),
             );
@@ -807,6 +838,29 @@ fn render_agy_brain_contents(
                         s.agy_effort = effort;
                     }
                 }
+            });
+
+            ui.add_space(4.0);
+            ui.with_layout(Layout::right_to_left(Align::TOP), |ui| {
+                ui.colored_label(
+                    pal.accent_gold,
+                    RichText::new("تحسينات سريعة للموشن والـ VFX (7 تعديلات بضغطة واحدة):")
+                        .small()
+                        .strong(),
+                );
+            });
+            ui.with_layout(Layout::right_to_left(Align::TOP), |ui| {
+                ui.horizontal_wrapped(|ui| {
+                    for fb in ArabicMotionFeedback::ALL {
+                        if ui
+                            .button(RichText::new(fb.arabic_label()).small())
+                            .on_hover_text(fb.english_summary())
+                            .clicked()
+                        {
+                            *pending_arabic_feedback = Some(fb);
+                        }
+                    }
+                });
             });
         });
 
@@ -949,6 +1003,7 @@ fn render_chat_contents(
     apply_refinement: &mut Option<Value>,
     trigger_undo: &mut bool,
     trigger_agy_direct: &mut bool,
+    pending_arabic_feedback: &mut Option<ArabicMotionFeedback>,
 ) {
     // Top Header Bar
     ui.horizontal(|ui| {
@@ -990,32 +1045,51 @@ fn render_chat_contents(
 
     ui.add_space(4.0);
 
-    // Unified Dual-Brain Switcher (⚡ TRON AI | ✦ AGY AI)
-    ui.horizontal(|ui| {
-        let is_tron = s.brain_mode == DualBrainMode::TronAi;
-        let is_agy = s.brain_mode == DualBrainMode::AgyAi;
-        if ui
-            .selectable_label(is_tron, RichText::new("⚡ TRON AI").strong())
-            .clicked()
-        {
-            s.brain_mode = DualBrainMode::TronAi;
+    // Unified 3-Brain Switcher (⚡ TRON AI · ✦ AGY AI · ☁️ GemiAI) + 20-Preset GemiTokens Switcher
+    ui.horizontal_wrapped(|ui| {
+        for mode in DualBrainMode::ALL {
+            let selected = s.brain_mode == mode;
+            if ui
+                .selectable_label(selected, RichText::new(mode.label()).strong())
+                .clicked()
+            {
+                s.brain_mode = mode;
+                if mode == DualBrainMode::GemiAi {
+                    s.agy_execution_scope = AntigravityExecutionScope::AccountRemoteAgent;
+                } else if mode == DualBrainMode::AgyAi && s.agy_fleet_status.is_none() {
+                    let ep = s.agy_fleet_ips.endpoint_for(s.agy_node).to_string();
+                    s.agy_fleet_status = probe_fleet_node_live_status(s.agy_node, Some(&ep)).ok();
+                }
+            }
         }
-        if ui
-            .selectable_label(is_agy, RichText::new("✦ AGY AI").strong())
-            .clicked()
-        {
-            s.brain_mode = DualBrainMode::AgyAi;
-            if s.agy_fleet_status.is_none() {
-                let ep = s.agy_fleet_ips.endpoint_for(s.agy_node).to_string();
-                s.agy_fleet_status = probe_fleet_node_live_status(s.agy_node, Some(&ep)).ok();
+        ui.separator();
+        let prev_preset = s.gemi_preset.clone();
+        egui::ComboBox::from_id_salt("aftertron.gemi_tokens_20")
+            .selected_text(format!("🎨 {}", s.gemi_preset))
+            .show_ui(ui, |ui| {
+                for pid in crate::gemi_tokens::PRESET_IDS {
+                    ui.selectable_value(&mut s.gemi_preset, pid.to_string(), pid);
+                }
+            });
+        if s.gemi_preset != prev_preset {
+            let is_dark = ui.visuals().dark_mode;
+            if let Some(tokens) = crate::theme::Tokens::for_gemi_preset(&s.gemi_preset, is_dark) {
+                crate::theme::apply_visuals(ui.ctx(), &tokens);
             }
         }
     });
 
     ui.add_space(4.0);
 
-    if s.brain_mode == DualBrainMode::AgyAi {
-        render_agy_brain_contents(ui, s, pal, trigger_agy_direct, trigger_undo);
+    if matches!(s.brain_mode, DualBrainMode::AgyAi | DualBrainMode::GemiAi) {
+        render_agy_brain_contents(
+            ui,
+            s,
+            pal,
+            trigger_agy_direct,
+            trigger_undo,
+            pending_arabic_feedback,
+        );
         return;
     }
 
@@ -1589,6 +1663,7 @@ pub fn show(ctx: &Context, session: &mut effectcraft_engine::Session) {
     let mut apply_refinement: Option<Value> = None;
     let mut trigger_undo = false;
     let mut trigger_agy_direct = false;
+    let mut pending_arabic_feedback: Option<ArabicMotionFeedback> = None;
 
     let bounds = ctx.content_rect();
     let win_frame = Frame::window(&ctx.global_style())
@@ -1638,8 +1713,25 @@ pub fn show(ctx: &Context, session: &mut effectcraft_engine::Session) {
             &mut apply_refinement,
             &mut trigger_undo,
             &mut trigger_agy_direct,
+            &mut pending_arabic_feedback,
         );
     });
+
+    if let Some(fb) = pending_arabic_feedback
+        && let Ok(mut s) = st.lock()
+    {
+        match apply_arabic_motion_feedback_session(session, fb) {
+            Ok(summary) => {
+                s.history.push(ChatTurn {
+                    role: "tron".into(),
+                    text: summary,
+                    badge: Some("Arabic VFX Refinement · 1-Click Undo".into()),
+                });
+                s.error = None;
+            }
+            Err(e) => s.error = Some(e),
+        }
+    }
 
     if trigger_agy_direct && let Ok(mut s) = st.lock() {
         let ep = s.agy_fleet_ips.endpoint_for(s.agy_node).to_string();
@@ -1817,5 +1909,19 @@ mod tests {
         assert!(!s.power_on);
         assert!(!s.transport_connected);
         assert_eq!(s.model_state, "NOT_LOADED");
+    }
+
+    #[test]
+    fn unified_brain_3_modes_14_models_5_efforts_xhigh_and_20_gemi_presets() {
+        assert_eq!(DualBrainMode::ALL.len(), 3);
+        assert_eq!(DualBrainMode::TronAi.label(), "⚡ TRON AI");
+        assert_eq!(DualBrainMode::AgyAi.label(), "✦ AGY AI");
+        assert_eq!(DualBrainMode::GemiAi.label(), "☁️ GemiAI");
+        assert_eq!(AntigravityModelId::ALL.len(), 14);
+        assert_eq!(AntigravityEffortLevel::ALL.len(), 5);
+        assert_eq!(AntigravityEffortLevel::Xhigh.thinking_budget_tokens(), 24_576);
+        assert_eq!(AntigravityEffortLevel::Xhigh.max_critique_passes(), 4);
+        assert_eq!(ArabicMotionFeedback::ALL.len(), 7);
+        assert_eq!(crate::gemi_tokens::PRESET_IDS.len(), 20);
     }
 }

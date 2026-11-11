@@ -71,28 +71,28 @@ harfrust = { version = "0.12", default-features = false, features = ["std"] }
 exr = "1.74"
 image = { version = "0.25", default-features = false, features = ["png", "jpeg"] }
 
-# media codecs + containers: FilmCraft's pure-Rust crates, pinned to a revision (plan/adr/0001).
+# media codecs + containers: FilmTron's pure-Rust crates from the sibling TronCS checkout.
 # Only `crates/media`, `crates/export` and `crates/interchange` may depend on these.
-filmcraft-codecs = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
-filmcraft-media = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
-filmcraft-frame = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
-filmcraft-color = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
-filmcraft-time = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
+filmcraft-codecs = { path = "../FilmTron/crates/codecs" }
+filmcraft-media = { path = "../FilmTron/crates/media" }
+filmcraft-frame = { path = "../FilmTron/crates/frame" }
+filmcraft-color = { path = "../FilmTron/crates/color" }
+filmcraft-time = { path = "../FilmTron/crates/time" }
 # encoders + muxer (crates/export)
-filmcraft-h264enc = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
-filmcraft-prores = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
-filmcraft-aac = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
-filmcraft-isobmff = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
+filmcraft-h264enc = { path = "../FilmTron/crates/h264enc" }
+filmcraft-prores = { path = "../FilmTron/crates/prores" }
+filmcraft-aac = { path = "../FilmTron/crates/aac" }
+filmcraft-isobmff = { path = "../FilmTron/crates/isobmff" }
 # decoder used as the round-trip oracle of effectcraft-opusenc (crates/export dev-dependency)
-filmcraft-opus = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
-filmcraft-vp9 = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
+filmcraft-opus = { path = "../FilmTron/crates/opus" }
+filmcraft-vp9 = { path = "../FilmTron/crates/vp9" }
 # decoders used as the round-trip oracles of effectcraft-hevcenc / effectcraft-av1enc (dev-dependencies only)
-filmcraft-hevc = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
-filmcraft-av1 = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
-# timeline interchange (EDL, FCP7 XML, FCPXML, OTIO) for Premiere Pro interop (crates/interchange only)
-filmcraft-interchange = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
-filmcraft-project = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
-filmcraft-geom = { git = "https://github.com/storytold/filmcraft", rev = "2c5ba7a72619935f0481f99d59409e0d1844b234" }
+filmcraft-hevc = { path = "../FilmTron/crates/hevc" }
+filmcraft-av1 = { path = "../FilmTron/crates/av1" }
+# timeline interchange (EDL, FCP7 XML, FCPXML, OTIO) for FilmTron / Premiere Pro interop (crates/interchange only)
+filmcraft-interchange = { path = "../FilmTron/crates/interchange" }
+filmcraft-project = { path = "../FilmTron/crates/project" }
+filmcraft-geom = { path = "../FilmTron/crates/geom" }
 # The symphonia filmcraft-codecs already builds, named only to turn on its AIFF reader: the pinned
 # rev enables wav alone (FilmCraft main enables aiff too). Drop it when the pin moves past that.
 symphonia = { version = "0.5.5", default-features = false, features = ["aiff"] }
@@ -113,17 +113,7 @@ cpal = "0.16"
 # The operating system's interface language (MIT/Apache-2.0, no dependencies on desktop).
 sys-locale = "0.3"
 
-# Local co-development against a FilmCraft checkout next to this repo: uncomment.
-# [patch."https://github.com/storytold/filmcraft"]
-# filmcraft-codecs = { path = "../filmcraft/crates/codecs" }
-# filmcraft-media = { path = "../filmcraft/crates/media" }
-# filmcraft-frame = { path = "../filmcraft/crates/frame" }
-# filmcraft-color = { path = "../filmcraft/crates/color" }
-# filmcraft-time = { path = "../filmcraft/crates/time" }
-# filmcraft-h264enc = { path = "../filmcraft/crates/h264enc" }
-# filmcraft-prores = { path = "../filmcraft/crates/prores" }
-# filmcraft-aac = { path = "../filmcraft/crates/aac" }
-# filmcraft-isobmff = { path = "../filmcraft/crates/isobmff" }
+# Local co-development against the sibling FilmTron checkout in the TronCS workspace is active above.
 
 [workspace.lints.rust]
 unsafe_code = "forbid"

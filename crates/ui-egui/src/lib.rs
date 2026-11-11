@@ -18,6 +18,7 @@ mod dock_shared;
 pub mod dock_ui;
 mod expression_diagnostics;
 pub mod frames;
+pub mod gemi_tokens;
 pub mod gpu_failure;
 pub mod header;
 pub mod i18n;

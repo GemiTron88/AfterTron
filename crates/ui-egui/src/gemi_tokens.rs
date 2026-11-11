@@ -1,0 +1,362 @@
+// GENERATED from GemiTron88/GemiTokens canonical v1 JSON — DO NOT EDIT.
+// Standalone native Rust data: no egui / WebView / Flutter runtime dependency.
+// Convert color.rgba() to egui::Color32 at the consuming UI boundary.
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct GemiColor(pub u8, pub u8, pub u8);
+impl GemiColor { pub const fn rgba(self) -> [u8; 4] { [self.0, self.1, self.2, 255] } }
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct GemiPalette { pub background: GemiColor, pub surface: GemiColor, pub surface_raised: GemiColor, pub text: GemiColor, pub muted: GemiColor, pub primary: GemiColor, pub on_primary: GemiColor, pub border: GemiColor, pub focus: GemiColor, pub success: GemiColor, pub danger: GemiColor }
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct GemiSpacing { pub xs: u16, pub sm: u16, pub md: u16, pub lg: u16, pub xl: u16 }
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct GemiRadii { pub sm: u16, pub md: u16, pub lg: u16 }
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct GemiTheme {
+  pub preset: &'static str,
+  pub dark: bool,
+  pub colors: GemiPalette,
+  pub spacing: GemiSpacing,
+  pub radii: GemiRadii,
+  pub font_family: &'static str,
+  pub layout_grammar: &'static str,
+  pub pro_dock: bool,
+  pub bevel: bool,
+  pub round_chips: bool,
+}
+
+pub const CORE_LIGHT: GemiPalette = GemiPalette { background: GemiColor(0xFB, 0xF9, 0xF7), surface: GemiColor(0xFF, 0xFF, 0xFF), surface_raised: GemiColor(0xF2, 0xEE, 0xEB), text: GemiColor(0x14, 0x12, 0x16), muted: GemiColor(0x57, 0x50, 0x5A), primary: GemiColor(0xC8, 0x1E, 0x32), on_primary: GemiColor(0xFF, 0xFF, 0xFF), border: GemiColor(0xD8, 0xD1, 0xCB), focus: GemiColor(0xC8, 0x1E, 0x32), success: GemiColor(0x14, 0x6B, 0x46), danger: GemiColor(0xB4, 0x23, 0x42) };
+pub const CORE_DARK: GemiPalette = GemiPalette { background: GemiColor(0x08, 0x08, 0x0A), surface: GemiColor(0x10, 0x10, 0x13), surface_raised: GemiColor(0x24, 0x24, 0x2A), text: GemiColor(0xF5, 0xF1, 0xED), muted: GemiColor(0xAC, 0xA8, 0xAE), primary: GemiColor(0xF8, 0x39, 0x42), on_primary: GemiColor(0x08, 0x08, 0x0A), border: GemiColor(0x37, 0x32, 0x39), focus: GemiColor(0xFF, 0xD4, 0x37), success: GemiColor(0x79, 0xDD, 0xB5), danger: GemiColor(0xFF, 0x6B, 0x81) };
+pub const CORE_SPACING: GemiSpacing = GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 };
+pub const CORE_RADII: GemiRadii = GemiRadii { sm: 8, md: 14, lg: 22 };
+pub const NEUTRAL_MEDIA_VIEWPORT: GemiColor = GemiColor(0x18, 0x18, 0x18);
+pub const NEUTRAL_SCOPE_PLOT: GemiColor = GemiColor(0x12, 0x12, 0x12);
+pub const PRESET_IDS: [&str; 20] = ["inferno", "royalGold", "cyberCyan", "liquidGlass", "modernMaterial", "cleanCommerce", "terracotta", "amethyst", "pixelArcade", "nordicFrost", "frostedWin", "macLiquid", "sakuraNody", "bakkaGold", "catVelvet", "retroMatrix", "oceanAbyss", "oledPitch", "sunsetDune", "emeraldMushaf"];
+
+/// Native preset lookup. Unknown presets return None; no silent design fallback.
+pub fn preset(id: &str, dark: bool) -> Option<GemiTheme> {
+  match (id, dark) {
+    ("inferno", false) => Some(GemiTheme {
+      preset: "inferno", dark: false,
+      colors: GemiPalette { background: GemiColor(0xFB, 0xF9, 0xF7), surface: GemiColor(0xFF, 0xFF, 0xFF), surface_raised: GemiColor(0xF2, 0xEE, 0xEB), text: GemiColor(0x14, 0x12, 0x16), muted: GemiColor(0x57, 0x50, 0x5A), primary: GemiColor(0xC8, 0x1E, 0x32), on_primary: GemiColor(0xFF, 0xFF, 0xFF), border: GemiColor(0xD8, 0xD1, 0xCB), focus: GemiColor(0xC8, 0x1E, 0x32), success: GemiColor(0x14, 0x6B, 0x46), danger: GemiColor(0xB4, 0x23, 0x42) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 6, md: 8, lg: 12 },
+      font_family: "GemiFontSans", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("inferno", true) => Some(GemiTheme {
+      preset: "inferno", dark: true,
+      colors: GemiPalette { background: GemiColor(0x08, 0x08, 0x0A), surface: GemiColor(0x10, 0x10, 0x13), surface_raised: GemiColor(0x24, 0x24, 0x2A), text: GemiColor(0xF5, 0xF1, 0xED), muted: GemiColor(0xAC, 0xA8, 0xAE), primary: GemiColor(0xF8, 0x39, 0x42), on_primary: GemiColor(0x08, 0x08, 0x0A), border: GemiColor(0x37, 0x32, 0x39), focus: GemiColor(0xFF, 0xD4, 0x37), success: GemiColor(0x79, 0xDD, 0xB5), danger: GemiColor(0xFF, 0x6B, 0x81) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 6, md: 8, lg: 12 },
+      font_family: "GemiFontSans", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("royalGold", false) => Some(GemiTheme {
+      preset: "royalGold", dark: false,
+      colors: GemiPalette { background: GemiColor(0xFA, 0xF7, 0xF2), surface: GemiColor(0xFF, 0xFF, 0xFF), surface_raised: GemiColor(0xF2, 0xEC, 0xE1), text: GemiColor(0x17, 0x14, 0x10), muted: GemiColor(0x59, 0x51, 0x45), primary: GemiColor(0x7C, 0x58, 0x0B), on_primary: GemiColor(0xFF, 0xFF, 0xFF), border: GemiColor(0xD9, 0xCF, 0xC0), focus: GemiColor(0x7C, 0x58, 0x0B), success: GemiColor(0x14, 0x6B, 0x46), danger: GemiColor(0xB4, 0x23, 0x42) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 4, md: 6, lg: 10 },
+      font_family: "Noto Serif", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("royalGold", true) => Some(GemiTheme {
+      preset: "royalGold", dark: true,
+      colors: GemiPalette { background: GemiColor(0x09, 0x09, 0x0C), surface: GemiColor(0x12, 0x11, 0x16), surface_raised: GemiColor(0x25, 0x22, 0x2B), text: GemiColor(0xF7, 0xF4, 0xEC), muted: GemiColor(0xB5, 0xAE, 0xA2), primary: GemiColor(0xE5, 0xB8, 0x42), on_primary: GemiColor(0x09, 0x09, 0x0C), border: GemiColor(0x3B, 0x35, 0x2C), focus: GemiColor(0xF7, 0xD3, 0x6A), success: GemiColor(0x79, 0xDD, 0xB5), danger: GemiColor(0xFF, 0x75, 0x88) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 4, md: 6, lg: 10 },
+      font_family: "Noto Serif", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("cyberCyan", false) => Some(GemiTheme {
+      preset: "cyberCyan", dark: false,
+      colors: GemiPalette { background: GemiColor(0xF3, 0xF8, 0xFA), surface: GemiColor(0xFF, 0xFF, 0xFF), surface_raised: GemiColor(0xE6, 0xF0, 0xF5), text: GemiColor(0x0D, 0x18, 0x21), muted: GemiColor(0x43, 0x56, 0x66), primary: GemiColor(0x08, 0x68, 0x80), on_primary: GemiColor(0xFF, 0xFF, 0xFF), border: GemiColor(0xC5, 0xD7, 0xE2), focus: GemiColor(0x08, 0x68, 0x80), success: GemiColor(0x14, 0x6B, 0x46), danger: GemiColor(0xB4, 0x23, 0x42) },
+      spacing: GemiSpacing { xs: 4, sm: 6, md: 10, lg: 14, xl: 20 },
+      radii: GemiRadii { sm: 3, md: 5, lg: 8 },
+      font_family: "JetBrains Mono", layout_grammar: "pro-dock",
+      pro_dock: true, bevel: false, round_chips: false,
+    }),
+    ("cyberCyan", true) => Some(GemiTheme {
+      preset: "cyberCyan", dark: true,
+      colors: GemiPalette { background: GemiColor(0x07, 0x0B, 0x10), surface: GemiColor(0x0E, 0x14, 0x1D), surface_raised: GemiColor(0x1D, 0x27, 0x36), text: GemiColor(0xEC, 0xF4, 0xFA), muted: GemiColor(0x9F, 0xB0, 0xC2), primary: GemiColor(0x22, 0xD3, 0xEE), on_primary: GemiColor(0x07, 0x0B, 0x10), border: GemiColor(0x2B, 0x3A, 0x4E), focus: GemiColor(0x67, 0xE8, 0xF9), success: GemiColor(0x6E, 0xE7, 0xB7), danger: GemiColor(0xFF, 0x75, 0x8F) },
+      spacing: GemiSpacing { xs: 4, sm: 6, md: 10, lg: 14, xl: 20 },
+      radii: GemiRadii { sm: 3, md: 5, lg: 8 },
+      font_family: "JetBrains Mono", layout_grammar: "pro-dock",
+      pro_dock: true, bevel: false, round_chips: false,
+    }),
+    ("liquidGlass", false) => Some(GemiTheme {
+      preset: "liquidGlass", dark: false,
+      colors: GemiPalette { background: GemiColor(0xF5, 0xF6, 0xFC), surface: GemiColor(0xFF, 0xFF, 0xFF), surface_raised: GemiColor(0xEA, 0xEC, 0xF7), text: GemiColor(0x12, 0x15, 0x26), muted: GemiColor(0x4B, 0x52, 0x6B), primary: GemiColor(0x37, 0x30, 0xA3), on_primary: GemiColor(0xFF, 0xFF, 0xFF), border: GemiColor(0xCE, 0xD3, 0xE8), focus: GemiColor(0x37, 0x30, 0xA3), success: GemiColor(0x14, 0x6B, 0x46), danger: GemiColor(0xB4, 0x23, 0x42) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 14, lg: 18, xl: 26 },
+      radii: GemiRadii { sm: 8, md: 12, lg: 16 },
+      font_family: "GemiFontSans-Light", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("liquidGlass", true) => Some(GemiTheme {
+      preset: "liquidGlass", dark: true,
+      colors: GemiPalette { background: GemiColor(0x09, 0x0C, 0x15), surface: GemiColor(0x11, 0x16, 0x25), surface_raised: GemiColor(0x22, 0x2A, 0x42), text: GemiColor(0xEF, 0xF2, 0xFC), muted: GemiColor(0xA8, 0xB1, 0xCA), primary: GemiColor(0x81, 0x8C, 0xF8), on_primary: GemiColor(0x09, 0x0C, 0x15), border: GemiColor(0x32, 0x3C, 0x59), focus: GemiColor(0xA5, 0xB4, 0xFC), success: GemiColor(0x79, 0xDD, 0xB5), danger: GemiColor(0xFF, 0x7A, 0x90) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 14, lg: 18, xl: 26 },
+      radii: GemiRadii { sm: 8, md: 12, lg: 16 },
+      font_family: "GemiFontSans-Light", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("modernMaterial", false) => Some(GemiTheme {
+      preset: "modernMaterial", dark: false,
+      colors: GemiPalette { background: GemiColor(0xF6, 0xF8, 0xFC), surface: GemiColor(0xFF, 0xFF, 0xFF), surface_raised: GemiColor(0xEB, 0xF0, 0xF8), text: GemiColor(0x11, 0x18, 0x27), muted: GemiColor(0x47, 0x55, 0x69), primary: GemiColor(0x1E, 0x40, 0xAF), on_primary: GemiColor(0xFF, 0xFF, 0xFF), border: GemiColor(0xCB, 0xD5, 0xE1), focus: GemiColor(0x1E, 0x40, 0xAF), success: GemiColor(0x14, 0x6B, 0x46), danger: GemiColor(0xB4, 0x23, 0x42) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 6, md: 10, lg: 14 },
+      font_family: "GemiFontSans", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("modernMaterial", true) => Some(GemiTheme {
+      preset: "modernMaterial", dark: true,
+      colors: GemiPalette { background: GemiColor(0x0A, 0x0E, 0x14), surface: GemiColor(0x12, 0x18, 0x22), surface_raised: GemiColor(0x22, 0x2C, 0x3C), text: GemiColor(0xEE, 0xF3, 0xFA), muted: GemiColor(0xA3, 0xB1, 0xC4), primary: GemiColor(0x60, 0xA5, 0xFA), on_primary: GemiColor(0x0A, 0x0E, 0x14), border: GemiColor(0x2F, 0x3D, 0x52), focus: GemiColor(0x93, 0xC5, 0xFD), success: GemiColor(0x79, 0xDD, 0xB5), danger: GemiColor(0xFF, 0x78, 0x8E) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 6, md: 10, lg: 14 },
+      font_family: "GemiFontSans", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("cleanCommerce", false) => Some(GemiTheme {
+      preset: "cleanCommerce", dark: false,
+      colors: GemiPalette { background: GemiColor(0xF5, 0xFA, 0xF7), surface: GemiColor(0xFF, 0xFF, 0xFF), surface_raised: GemiColor(0xE6, 0xF2, 0xEC), text: GemiColor(0x0D, 0x1C, 0x16), muted: GemiColor(0x42, 0x59, 0x4F), primary: GemiColor(0x06, 0x5F, 0x46), on_primary: GemiColor(0xFF, 0xFF, 0xFF), border: GemiColor(0xC4, 0xDC, 0xD0), focus: GemiColor(0x06, 0x5F, 0x46), success: GemiColor(0x14, 0x6B, 0x46), danger: GemiColor(0xB4, 0x23, 0x42) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 5, md: 8, lg: 12 },
+      font_family: "GemiBaba", layout_grammar: "pro-dock",
+      pro_dock: true, bevel: false, round_chips: false,
+    }),
+    ("cleanCommerce", true) => Some(GemiTheme {
+      preset: "cleanCommerce", dark: true,
+      colors: GemiPalette { background: GemiColor(0x07, 0x10, 0x0D), surface: GemiColor(0x0E, 0x1B, 0x16), surface_raised: GemiColor(0x1D, 0x32, 0x2A), text: GemiColor(0xEC, 0xF7, 0xF2), muted: GemiColor(0x9E, 0xB8, 0xAD), primary: GemiColor(0x34, 0xD3, 0x99), on_primary: GemiColor(0x07, 0x10, 0x0D), border: GemiColor(0x2B, 0x47, 0x3C), focus: GemiColor(0x6E, 0xE7, 0xB7), success: GemiColor(0x6E, 0xE7, 0xB7), danger: GemiColor(0xFF, 0x78, 0x8E) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 5, md: 8, lg: 12 },
+      font_family: "GemiBaba", layout_grammar: "pro-dock",
+      pro_dock: true, bevel: false, round_chips: false,
+    }),
+    ("terracotta", false) => Some(GemiTheme {
+      preset: "terracotta", dark: false,
+      colors: GemiPalette { background: GemiColor(0xFB, 0xF7, 0xF3), surface: GemiColor(0xFF, 0xFF, 0xFF), surface_raised: GemiColor(0xF3, 0xEA, 0xE2), text: GemiColor(0x1C, 0x13, 0x10), muted: GemiColor(0x5E, 0x4B, 0x44), primary: GemiColor(0x8A, 0x2E, 0x0D), on_primary: GemiColor(0xFF, 0xFF, 0xFF), border: GemiColor(0xDE, 0xCB, 0xC0), focus: GemiColor(0x8A, 0x2E, 0x0D), success: GemiColor(0x14, 0x6B, 0x46), danger: GemiColor(0xB4, 0x23, 0x42) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 7, md: 10, lg: 14 },
+      font_family: "Noto Serif", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("terracotta", true) => Some(GemiTheme {
+      preset: "terracotta", dark: true,
+      colors: GemiPalette { background: GemiColor(0x10, 0x0B, 0x09), surface: GemiColor(0x19, 0x12, 0x10), surface_raised: GemiColor(0x2D, 0x22, 0x1E), text: GemiColor(0xF8, 0xF1, 0xEC), muted: GemiColor(0xB8, 0xA9, 0xA1), primary: GemiColor(0xFB, 0x92, 0x3C), on_primary: GemiColor(0x10, 0x0B, 0x09), border: GemiColor(0x42, 0x32, 0x2C), focus: GemiColor(0xFD, 0xBA, 0x74), success: GemiColor(0x79, 0xDD, 0xB5), danger: GemiColor(0xFF, 0x7A, 0x8E) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 7, md: 10, lg: 14 },
+      font_family: "Noto Serif", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("amethyst", false) => Some(GemiTheme {
+      preset: "amethyst", dark: false,
+      colors: GemiPalette { background: GemiColor(0xFA, 0xF7, 0xFC), surface: GemiColor(0xFF, 0xFF, 0xFF), surface_raised: GemiColor(0xF0, 0xE9, 0xF7), text: GemiColor(0x1A, 0x11, 0x24), muted: GemiColor(0x58, 0x48, 0x69), primary: GemiColor(0x6B, 0x21, 0xA8), on_primary: GemiColor(0xFF, 0xFF, 0xFF), border: GemiColor(0xD8, 0xCB, 0xE8), focus: GemiColor(0x6B, 0x21, 0xA8), success: GemiColor(0x14, 0x6B, 0x46), danger: GemiColor(0xB4, 0x23, 0x42) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 7, md: 11, lg: 15 },
+      font_family: "GemiBaba-Bold", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("amethyst", true) => Some(GemiTheme {
+      preset: "amethyst", dark: true,
+      colors: GemiPalette { background: GemiColor(0x0C, 0x08, 0x12), surface: GemiColor(0x15, 0x10, 0x1F), surface_raised: GemiColor(0x28, 0x1F, 0x38), text: GemiColor(0xF5, 0xEF, 0xFB), muted: GemiColor(0xB2, 0xA5, 0xC2), primary: GemiColor(0xC0, 0x84, 0xFC), on_primary: GemiColor(0x0C, 0x08, 0x12), border: GemiColor(0x3B, 0x2E, 0x52), focus: GemiColor(0xD8, 0xB4, 0xFE), success: GemiColor(0x79, 0xDD, 0xB5), danger: GemiColor(0xFF, 0x78, 0x90) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 7, md: 11, lg: 15 },
+      font_family: "GemiBaba-Bold", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("pixelArcade", false) => Some(GemiTheme {
+      preset: "pixelArcade", dark: false,
+      colors: GemiPalette { background: GemiColor(0xF4, 0xF1, 0xE8), surface: GemiColor(0xFF, 0xFF, 0xFF), surface_raised: GemiColor(0xE8, 0xE3, 0xD5), text: GemiColor(0x16, 0x13, 0x20), muted: GemiColor(0x55, 0x4D, 0x63), primary: GemiColor(0x9E, 0x0B, 0x52), on_primary: GemiColor(0xFF, 0xFF, 0xFF), border: GemiColor(0xCE, 0xC7, 0xB6), focus: GemiColor(0x9E, 0x0B, 0x52), success: GemiColor(0x14, 0x6B, 0x46), danger: GemiColor(0xB4, 0x23, 0x42) },
+      spacing: GemiSpacing { xs: 4, sm: 6, md: 10, lg: 14, xl: 20 },
+      radii: GemiRadii { sm: 2, md: 3, lg: 4 },
+      font_family: "JetBrains Mono", layout_grammar: "pixel-bevel",
+      pro_dock: false, bevel: true, round_chips: false,
+    }),
+    ("pixelArcade", true) => Some(GemiTheme {
+      preset: "pixelArcade", dark: true,
+      colors: GemiPalette { background: GemiColor(0x08, 0x08, 0x11), surface: GemiColor(0x11, 0x11, 0x22), surface_raised: GemiColor(0x23, 0x23, 0x3E), text: GemiColor(0xF6, 0xF0, 0xFA), muted: GemiColor(0xB0, 0xA7, 0xC4), primary: GemiColor(0xFF, 0x5C, 0xA8), on_primary: GemiColor(0x08, 0x08, 0x11), border: GemiColor(0x3A, 0x36, 0x5E), focus: GemiColor(0x00, 0xF5, 0xD4), success: GemiColor(0x79, 0xDD, 0xB5), danger: GemiColor(0xFF, 0x78, 0x90) },
+      spacing: GemiSpacing { xs: 4, sm: 6, md: 10, lg: 14, xl: 20 },
+      radii: GemiRadii { sm: 2, md: 3, lg: 4 },
+      font_family: "JetBrains Mono", layout_grammar: "pixel-bevel",
+      pro_dock: false, bevel: true, round_chips: false,
+    }),
+    ("nordicFrost", false) => Some(GemiTheme {
+      preset: "nordicFrost", dark: false,
+      colors: GemiPalette { background: GemiColor(0xF4, 0xF8, 0xFB), surface: GemiColor(0xFF, 0xFF, 0xFF), surface_raised: GemiColor(0xE7, 0xEF, 0xF6), text: GemiColor(0x0F, 0x19, 0x22), muted: GemiColor(0x46, 0x58, 0x69), primary: GemiColor(0x07, 0x59, 0x85), on_primary: GemiColor(0xFF, 0xFF, 0xFF), border: GemiColor(0xC6, 0xD6, 0xE4), focus: GemiColor(0x07, 0x59, 0x85), success: GemiColor(0x14, 0x6B, 0x46), danger: GemiColor(0xB4, 0x23, 0x42) },
+      spacing: GemiSpacing { xs: 4, sm: 6, md: 10, lg: 14, xl: 20 },
+      radii: GemiRadii { sm: 4, md: 6, lg: 9 },
+      font_family: "GemiBaba-Light", layout_grammar: "pro-dock",
+      pro_dock: true, bevel: false, round_chips: false,
+    }),
+    ("nordicFrost", true) => Some(GemiTheme {
+      preset: "nordicFrost", dark: true,
+      colors: GemiPalette { background: GemiColor(0x09, 0x0E, 0x14), surface: GemiColor(0x11, 0x19, 0x22), surface_raised: GemiColor(0x20, 0x2E, 0x3D), text: GemiColor(0xED, 0xF4, 0xF9), muted: GemiColor(0xA1, 0xB3, 0xC4), primary: GemiColor(0x38, 0xBD, 0xF8), on_primary: GemiColor(0x09, 0x0E, 0x14), border: GemiColor(0x2D, 0x40, 0x54), focus: GemiColor(0x7D, 0xD3, 0xFC), success: GemiColor(0x79, 0xDD, 0xB5), danger: GemiColor(0xFF, 0x78, 0x8E) },
+      spacing: GemiSpacing { xs: 4, sm: 6, md: 10, lg: 14, xl: 20 },
+      radii: GemiRadii { sm: 4, md: 6, lg: 9 },
+      font_family: "GemiBaba-Light", layout_grammar: "pro-dock",
+      pro_dock: true, bevel: false, round_chips: false,
+    }),
+    ("frostedWin", false) => Some(GemiTheme {
+      preset: "frostedWin", dark: false,
+      colors: GemiPalette { background: GemiColor(0xF4, 0xF7, 0xFB), surface: GemiColor(0xFF, 0xFF, 0xFF), surface_raised: GemiColor(0xE8, 0xEE, 0xF7), text: GemiColor(0x11, 0x17, 0x22), muted: GemiColor(0x49, 0x56, 0x6B), primary: GemiColor(0x00, 0x5F, 0xB8), on_primary: GemiColor(0xFF, 0xFF, 0xFF), border: GemiColor(0xC8, 0xD4, 0xE6), focus: GemiColor(0x00, 0x5F, 0xB8), success: GemiColor(0x14, 0x6B, 0x46), danger: GemiColor(0xB4, 0x23, 0x42) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 6, md: 10, lg: 16 },
+      font_family: "GemiFontSans", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("frostedWin", true) => Some(GemiTheme {
+      preset: "frostedWin", dark: true,
+      colors: GemiPalette { background: GemiColor(0x0B, 0x0E, 0x14), surface: GemiColor(0x13, 0x18, 0x22), surface_raised: GemiColor(0x21, 0x29, 0x3A), text: GemiColor(0xF0, 0xF4, 0xFA), muted: GemiColor(0xA5, 0xB2, 0xC6), primary: GemiColor(0x4C, 0xC2, 0xFF), on_primary: GemiColor(0x0B, 0x0E, 0x14), border: GemiColor(0x32, 0x3E, 0x54), focus: GemiColor(0x7A, 0xD4, 0xFF), success: GemiColor(0x6E, 0xE7, 0xB7), danger: GemiColor(0xFF, 0x7A, 0x90) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 6, md: 10, lg: 16 },
+      font_family: "GemiFontSans", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("macLiquid", false) => Some(GemiTheme {
+      preset: "macLiquid", dark: false,
+      colors: GemiPalette { background: GemiColor(0xF6, 0xF7, 0xFC), surface: GemiColor(0xFF, 0xFF, 0xFF), surface_raised: GemiColor(0xEB, 0xEE, 0xF9), text: GemiColor(0x10, 0x14, 0x26), muted: GemiColor(0x49, 0x51, 0x6E), primary: GemiColor(0x25, 0x46, 0xB8), on_primary: GemiColor(0xFF, 0xFF, 0xFF), border: GemiColor(0xCC, 0xD3, 0xEB), focus: GemiColor(0x25, 0x46, 0xB8), success: GemiColor(0x14, 0x6B, 0x46), danger: GemiColor(0xB4, 0x23, 0x42) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 14, lg: 18, xl: 26 },
+      radii: GemiRadii { sm: 8, md: 14, lg: 22 },
+      font_family: "GemiFontSans", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("macLiquid", true) => Some(GemiTheme {
+      preset: "macLiquid", dark: true,
+      colors: GemiPalette { background: GemiColor(0x07, 0x09, 0x11), surface: GemiColor(0x10, 0x14, 0x24), surface_raised: GemiColor(0x1E, 0x25, 0x40), text: GemiColor(0xF2, 0xF5, 0xFF), muted: GemiColor(0xA6, 0xB0, 0xCE), primary: GemiColor(0x7A, 0xA2, 0xF7), on_primary: GemiColor(0x07, 0x09, 0x11), border: GemiColor(0x30, 0x3B, 0x60), focus: GemiColor(0xA9, 0xC4, 0xFF), success: GemiColor(0x73, 0xDA, 0xCA), danger: GemiColor(0xFF, 0x7A, 0x93) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 14, lg: 18, xl: 26 },
+      radii: GemiRadii { sm: 8, md: 14, lg: 22 },
+      font_family: "GemiFontSans", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("sakuraNody", false) => Some(GemiTheme {
+      preset: "sakuraNody", dark: false,
+      colors: GemiPalette { background: GemiColor(0xFD, 0xF6, 0xF9), surface: GemiColor(0xFF, 0xFF, 0xFF), surface_raised: GemiColor(0xF7, 0xE8, 0xEF), text: GemiColor(0x22, 0x10, 0x1A), muted: GemiColor(0x66, 0x46, 0x58), primary: GemiColor(0x9C, 0x19, 0x53), on_primary: GemiColor(0xFF, 0xFF, 0xFF), border: GemiColor(0xE3, 0xC8, 0xD6), focus: GemiColor(0x9C, 0x19, 0x53), success: GemiColor(0x14, 0x6B, 0x46), danger: GemiColor(0xB4, 0x23, 0x42) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 8, md: 12, lg: 18 },
+      font_family: "GemiFontSans", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("sakuraNody", true) => Some(GemiTheme {
+      preset: "sakuraNody", dark: true,
+      colors: GemiPalette { background: GemiColor(0x12, 0x09, 0x10), surface: GemiColor(0x1C, 0x10, 0x19), surface_raised: GemiColor(0x32, 0x1D, 0x2D), text: GemiColor(0xFC, 0xF0, 0xF7), muted: GemiColor(0xC8, 0xA6, 0xBA), primary: GemiColor(0xFF, 0x85, 0xB3), on_primary: GemiColor(0x12, 0x09, 0x10), border: GemiColor(0x4D, 0x2E, 0x45), focus: GemiColor(0xFF, 0xB3, 0xD1), success: GemiColor(0x79, 0xDD, 0xB5), danger: GemiColor(0xFF, 0x75, 0x8F) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 8, md: 12, lg: 18 },
+      font_family: "GemiFontSans", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("bakkaGold", false) => Some(GemiTheme {
+      preset: "bakkaGold", dark: false,
+      colors: GemiPalette { background: GemiColor(0xFB, 0xF9, 0xF3), surface: GemiColor(0xFF, 0xFF, 0xFF), surface_raised: GemiColor(0xF3, 0xED, 0xE0), text: GemiColor(0x18, 0x15, 0x0E), muted: GemiColor(0x5C, 0x53, 0x40), primary: GemiColor(0x75, 0x53, 0x08), on_primary: GemiColor(0xFF, 0xFF, 0xFF), border: GemiColor(0xDD, 0xD2, 0xBC), focus: GemiColor(0x75, 0x53, 0x08), success: GemiColor(0x14, 0x6B, 0x46), danger: GemiColor(0xB4, 0x23, 0x42) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 6, md: 10, lg: 16 },
+      font_family: "GemiFontSans", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("bakkaGold", true) => Some(GemiTheme {
+      preset: "bakkaGold", dark: true,
+      colors: GemiPalette { background: GemiColor(0x07, 0x07, 0x06), surface: GemiColor(0x11, 0x10, 0x0D), surface_raised: GemiColor(0x24, 0x20, 0x18), text: GemiColor(0xF9, 0xF5, 0xEB), muted: GemiColor(0xBB, 0xAE, 0x96), primary: GemiColor(0xF0, 0xC4, 0x4D), on_primary: GemiColor(0x07, 0x07, 0x06), border: GemiColor(0x3D, 0x35, 0x24), focus: GemiColor(0xFF, 0xE0, 0x82), success: GemiColor(0x79, 0xDD, 0xB5), danger: GemiColor(0xFF, 0x78, 0x8A) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 6, md: 10, lg: 16 },
+      font_family: "GemiFontSans", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("catVelvet", false) => Some(GemiTheme {
+      preset: "catVelvet", dark: false,
+      colors: GemiPalette { background: GemiColor(0xFC, 0xF7, 0xF9), surface: GemiColor(0xFF, 0xFF, 0xFF), surface_raised: GemiColor(0xF5, 0xE9, 0xEE), text: GemiColor(0x1F, 0x13, 0x19), muted: GemiColor(0x61, 0x49, 0x55), primary: GemiColor(0x8C, 0x2D, 0x19), on_primary: GemiColor(0xFF, 0xFF, 0xFF), border: GemiColor(0xDF, 0xCC, 0xD5), focus: GemiColor(0x8C, 0x2D, 0x19), success: GemiColor(0x14, 0x6B, 0x46), danger: GemiColor(0xB4, 0x23, 0x42) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 8, md: 12, lg: 18 },
+      font_family: "GemiFontSans", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("catVelvet", true) => Some(GemiTheme {
+      preset: "catVelvet", dark: true,
+      colors: GemiPalette { background: GemiColor(0x10, 0x0B, 0x0E), surface: GemiColor(0x1A, 0x12, 0x17), surface_raised: GemiColor(0x2E, 0x20, 0x29), text: GemiColor(0xFA, 0xF0, 0xF5), muted: GemiColor(0xC2, 0xA7, 0xB5), primary: GemiColor(0xFF, 0xA0, 0x7A), on_primary: GemiColor(0x10, 0x0B, 0x0E), border: GemiColor(0x47, 0x32, 0x3F), focus: GemiColor(0xFF, 0xC1, 0xA6), success: GemiColor(0x79, 0xDD, 0xB5), danger: GemiColor(0xFF, 0x78, 0x90) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 8, md: 12, lg: 18 },
+      font_family: "GemiFontSans", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("retroMatrix", false) => Some(GemiTheme {
+      preset: "retroMatrix", dark: false,
+      colors: GemiPalette { background: GemiColor(0xF2, 0xF8, 0xF4), surface: GemiColor(0xFF, 0xFF, 0xFF), surface_raised: GemiColor(0xE3, 0xEF, 0xE7), text: GemiColor(0x0B, 0x1B, 0x10), muted: GemiColor(0x3F, 0x59, 0x47), primary: GemiColor(0x0F, 0x62, 0x2C), on_primary: GemiColor(0xFF, 0xFF, 0xFF), border: GemiColor(0xC0, 0xD8, 0xC7), focus: GemiColor(0x0F, 0x62, 0x2C), success: GemiColor(0x14, 0x6B, 0x46), danger: GemiColor(0xB4, 0x23, 0x42) },
+      spacing: GemiSpacing { xs: 4, sm: 6, md: 10, lg: 14, xl: 20 },
+      radii: GemiRadii { sm: 2, md: 4, lg: 6 },
+      font_family: "JetBrains Mono", layout_grammar: "pixel-bevel",
+      pro_dock: true, bevel: true, round_chips: false,
+    }),
+    ("retroMatrix", true) => Some(GemiTheme {
+      preset: "retroMatrix", dark: true,
+      colors: GemiPalette { background: GemiColor(0x05, 0x0B, 0x07), surface: GemiColor(0x0B, 0x16, 0x0F), surface_raised: GemiColor(0x16, 0x2B, 0x1E), text: GemiColor(0xE6, 0xF9, 0xEC), muted: GemiColor(0x94, 0xBD, 0x9F), primary: GemiColor(0x4A, 0xDE, 0x80), on_primary: GemiColor(0x05, 0x0B, 0x07), border: GemiColor(0x24, 0x47, 0x31), focus: GemiColor(0x86, 0xEF, 0xAC), success: GemiColor(0x6E, 0xE7, 0xB7), danger: GemiColor(0xFF, 0x78, 0x8E) },
+      spacing: GemiSpacing { xs: 4, sm: 6, md: 10, lg: 14, xl: 20 },
+      radii: GemiRadii { sm: 2, md: 4, lg: 6 },
+      font_family: "JetBrains Mono", layout_grammar: "pixel-bevel",
+      pro_dock: true, bevel: true, round_chips: false,
+    }),
+    ("oceanAbyss", false) => Some(GemiTheme {
+      preset: "oceanAbyss", dark: false,
+      colors: GemiPalette { background: GemiColor(0xF3, 0xF9, 0xFB), surface: GemiColor(0xFF, 0xFF, 0xFF), surface_raised: GemiColor(0xE5, 0xF2, 0xF6), text: GemiColor(0x0C, 0x1A, 0x24), muted: GemiColor(0x42, 0x58, 0x66), primary: GemiColor(0x0B, 0x64, 0x70), on_primary: GemiColor(0xFF, 0xFF, 0xFF), border: GemiColor(0xC2, 0xD9, 0xE0), focus: GemiColor(0x0B, 0x64, 0x70), success: GemiColor(0x14, 0x6B, 0x46), danger: GemiColor(0xB4, 0x23, 0x42) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 6, md: 10, lg: 16 },
+      font_family: "GemiFontSans", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("oceanAbyss", true) => Some(GemiTheme {
+      preset: "oceanAbyss", dark: true,
+      colors: GemiPalette { background: GemiColor(0x06, 0x0D, 0x13), surface: GemiColor(0x0D, 0x18, 0x22), surface_raised: GemiColor(0x1A, 0x2E, 0x3F), text: GemiColor(0xEC, 0xF6, 0xFC), muted: GemiColor(0x9E, 0xB6, 0xC7), primary: GemiColor(0x2D, 0xD4, 0xBF), on_primary: GemiColor(0x06, 0x0D, 0x13), border: GemiColor(0x27, 0x44, 0x5C), focus: GemiColor(0x5E, 0xEA, 0xD4), success: GemiColor(0x6E, 0xE7, 0xB7), danger: GemiColor(0xFF, 0x78, 0x8E) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 6, md: 10, lg: 16 },
+      font_family: "GemiFontSans", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("oledPitch", false) => Some(GemiTheme {
+      preset: "oledPitch", dark: false,
+      colors: GemiPalette { background: GemiColor(0xF8, 0xF8, 0xFA), surface: GemiColor(0xFF, 0xFF, 0xFF), surface_raised: GemiColor(0xEC, 0xEC, 0xF0), text: GemiColor(0x0E, 0x0E, 0x12), muted: GemiColor(0x4D, 0x4D, 0x57), primary: GemiColor(0x1F, 0x1F, 0x29), on_primary: GemiColor(0xFF, 0xFF, 0xFF), border: GemiColor(0xCF, 0xCF, 0xD8), focus: GemiColor(0x1F, 0x1F, 0x29), success: GemiColor(0x14, 0x6B, 0x46), danger: GemiColor(0xB4, 0x23, 0x42) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 6, md: 10, lg: 16 },
+      font_family: "GemiFontSans", layout_grammar: "pro-dock",
+      pro_dock: true, bevel: false, round_chips: true,
+    }),
+    ("oledPitch", true) => Some(GemiTheme {
+      preset: "oledPitch", dark: true,
+      colors: GemiPalette { background: GemiColor(0x00, 0x00, 0x00), surface: GemiColor(0x09, 0x09, 0x0B), surface_raised: GemiColor(0x18, 0x18, 0x1C), text: GemiColor(0xFA, 0xFA, 0xFC), muted: GemiColor(0xA6, 0xA6, 0xB0), primary: GemiColor(0xFF, 0xD4, 0x37), on_primary: GemiColor(0x00, 0x00, 0x00), border: GemiColor(0x2E, 0x2E, 0x36), focus: GemiColor(0xFF, 0xE3, 0x73), success: GemiColor(0x79, 0xDD, 0xB5), danger: GemiColor(0xFF, 0x75, 0x88) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 6, md: 10, lg: 16 },
+      font_family: "GemiFontSans", layout_grammar: "pro-dock",
+      pro_dock: true, bevel: false, round_chips: true,
+    }),
+    ("sunsetDune", false) => Some(GemiTheme {
+      preset: "sunsetDune", dark: false,
+      colors: GemiPalette { background: GemiColor(0xFC, 0xF7, 0xF5), surface: GemiColor(0xFF, 0xFF, 0xFF), surface_raised: GemiColor(0xF5, 0xEA, 0xE5), text: GemiColor(0x21, 0x12, 0x0E), muted: GemiColor(0x61, 0x49, 0x42), primary: GemiColor(0x94, 0x29, 0x11), on_primary: GemiColor(0xFF, 0xFF, 0xFF), border: GemiColor(0xE0, 0xCA, 0xC2), focus: GemiColor(0x94, 0x29, 0x11), success: GemiColor(0x14, 0x6B, 0x46), danger: GemiColor(0xB4, 0x23, 0x42) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 6, md: 10, lg: 14 },
+      font_family: "GemiFontSans", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("sunsetDune", true) => Some(GemiTheme {
+      preset: "sunsetDune", dark: true,
+      colors: GemiPalette { background: GemiColor(0x11, 0x09, 0x07), surface: GemiColor(0x1B, 0x10, 0x0D), surface_raised: GemiColor(0x30, 0x1E, 0x19), text: GemiColor(0xFA, 0xF1, 0xEE), muted: GemiColor(0xC2, 0xA8, 0xA0), primary: GemiColor(0xFF, 0x7A, 0x45), on_primary: GemiColor(0x11, 0x09, 0x07), border: GemiColor(0x4A, 0x2E, 0x26), focus: GemiColor(0xFF, 0xA9, 0x85), success: GemiColor(0x79, 0xDD, 0xB5), danger: GemiColor(0xFF, 0x78, 0x90) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 6, md: 10, lg: 14 },
+      font_family: "GemiFontSans", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("emeraldMushaf", false) => Some(GemiTheme {
+      preset: "emeraldMushaf", dark: false,
+      colors: GemiPalette { background: GemiColor(0xF6, 0xFA, 0xF7), surface: GemiColor(0xFF, 0xFF, 0xFF), surface_raised: GemiColor(0xE7, 0xF2, 0xEB), text: GemiColor(0x0C, 0x1C, 0x14), muted: GemiColor(0x42, 0x59, 0x4D), primary: GemiColor(0x0A, 0x61, 0x3B), on_primary: GemiColor(0xFF, 0xFF, 0xFF), border: GemiColor(0xC4, 0xDD, 0xD0), focus: GemiColor(0x0A, 0x61, 0x3B), success: GemiColor(0x14, 0x6B, 0x46), danger: GemiColor(0xB4, 0x23, 0x42) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 6, md: 10, lg: 16 },
+      font_family: "GemiFontSans", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    ("emeraldMushaf", true) => Some(GemiTheme {
+      preset: "emeraldMushaf", dark: true,
+      colors: GemiPalette { background: GemiColor(0x06, 0x0F, 0x0B), surface: GemiColor(0x0C, 0x1B, 0x14), surface_raised: GemiColor(0x18, 0x32, 0x26), text: GemiColor(0xEE, 0xF8, 0xF2), muted: GemiColor(0x9F, 0xBA, 0xB0), primary: GemiColor(0x4A, 0xDE, 0x80), on_primary: GemiColor(0x06, 0x0F, 0x0B), border: GemiColor(0x26, 0x4A, 0x39), focus: GemiColor(0x86, 0xEF, 0xAC), success: GemiColor(0x79, 0xDD, 0xB5), danger: GemiColor(0xFF, 0x78, 0x8E) },
+      spacing: GemiSpacing { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
+      radii: GemiRadii { sm: 6, md: 10, lg: 16 },
+      font_family: "GemiFontSans", layout_grammar: "glass-cards",
+      pro_dock: false, bevel: false, round_chips: true,
+    }),
+    _ => None,
+  }
+}

@@ -84,6 +84,8 @@ pub struct Tokens {
     pub keyframe: Color32,
     pub keyframe_selected: Color32,
     pub pasteboard: Color32,
+    /// Strictly neutral scope/waveform/histogram plot background (`#121212`, `R == G == B`).
+    pub scope_plot: Color32,
     pub timecode: Color32,
     pub danger: Color32,
     pub warning: Color32,
@@ -170,6 +172,7 @@ impl Tokens {
             keyframe: Color32::from_rgb(0xa8, 0xa8, 0xa8),
             keyframe_selected: Color32::from_rgb(0x3d, 0x8f, 0xf5),
             pasteboard: Color32::from_rgb(0x1a, 0x1a, 0x1a),
+            scope_plot: Color32::from_rgb(0x12, 0x12, 0x12),
             timecode: Color32::from_rgb(0x3d, 0x8f, 0xf5),
             danger: Color32::from_rgb(0xe0, 0x4a, 0x3c),
             warning: Color32::from_rgb(0xe8, 0x9a, 0x2c),
@@ -322,6 +325,68 @@ impl Tokens {
                 ..dark
             },
         }
+    }
+
+    /// Build chrome [`Tokens`] from any of the 20 canonical `GemiTokens` presets (`dark` or `light`
+    /// mode = 40 total modes), while strictly locking `pasteboard` (`#181818`) and `scope_plot`
+    /// (`#121212`) to `R == G == B` neutral surfaces so colour-critical VFX compositing never shifts.
+    pub fn for_gemi_preset(preset_id: &str, dark: bool) -> Option<Self> {
+        let gt = crate::gemi_tokens::preset(preset_id, dark)?;
+        let c = |gc: crate::gemi_tokens::GemiColor| Color32::from_rgb(gc.0, gc.1, gc.2);
+        let base = Self::for_kind(if dark { ThemeKind::InfernoDark } else { ThemeKind::InfernoLight });
+        let p = gt.colors;
+        let bg = c(p.background);
+        let surf = c(p.surface);
+        let raised = c(p.surface_raised);
+        let primary = c(p.primary);
+        let focus = c(p.focus);
+        let text = c(p.text);
+        let muted = c(p.muted);
+        let border = c(p.border);
+        let neutral_pasteboard = c(crate::gemi_tokens::NEUTRAL_MEDIA_VIEWPORT);
+        let neutral_scope = c(crate::gemi_tokens::NEUTRAL_SCOPE_PLOT);
+        Some(Tokens {
+            app_bg: bg,
+            header_bg: surf,
+            panel_bg: surf,
+            tab_text: muted,
+            tab_text_active: text,
+            focus,
+            accent: primary,
+            accent_hover: focus,
+            text,
+            text_dim: muted,
+            text_faint: muted,
+            icon: muted,
+            icon_active: text,
+            hover: raised,
+            pressed: border,
+            field_bg: bg,
+            field_border: border,
+            separator: border,
+            row: surf,
+            row_alt: raised,
+            row_selected: raised,
+            hot_text: focus,
+            tl_bg: bg,
+            tl_ruler_bg: surf,
+            tl_ruler_tick: border,
+            tl_ruler_text: muted,
+            cti: primary,
+            keyframe_selected: focus,
+            pasteboard: neutral_pasteboard,
+            scope_plot: neutral_scope,
+            timecode: focus,
+            danger: c(p.danger),
+            fx_header: raised,
+            fx_header_active: border,
+            tl_graph_selected: raised,
+            switch_well: bg,
+            expr_bg: bg,
+            radius: (gt.radii.sm as f32).clamp(3.0, 12.0),
+            radius_sm: ((gt.radii.sm / 2) as f32).clamp(2.0, 6.0),
+            ..base
+        })
     }
 
     pub fn mono(size: f32) -> FontId {
@@ -866,5 +931,23 @@ mod tests {
         assert_eq!(light.text, Color32::from_rgb(0x15, 0x13, 0x18));
         assert_eq!(light.pasteboard.r(), light.pasteboard.g());
         assert_eq!(light.pasteboard.g(), light.pasteboard.b());
+    }
+
+    #[test]
+    fn all_20_gemi_tokens_presets_preserve_strict_neutral_pasteboard_and_scope_rgb() {
+        assert_eq!(crate::gemi_tokens::PRESET_IDS.len(), 20);
+        for id in crate::gemi_tokens::PRESET_IDS {
+            for dark in [false, true] {
+                let Some(tokens) = Tokens::for_gemi_preset(id, dark) else {
+                    panic!("missing GemiTokens preset {id} (dark={dark})");
+                };
+                assert_eq!(tokens.pasteboard, Color32::from_rgb(0x18, 0x18, 0x18));
+                assert_eq!(tokens.pasteboard.r(), tokens.pasteboard.g());
+                assert_eq!(tokens.pasteboard.g(), tokens.pasteboard.b());
+                assert_eq!(tokens.scope_plot, Color32::from_rgb(0x12, 0x12, 0x12));
+                assert_eq!(tokens.scope_plot.r(), tokens.scope_plot.g());
+                assert_eq!(tokens.scope_plot.g(), tokens.scope_plot.b());
+            }
+        }
     }
 }

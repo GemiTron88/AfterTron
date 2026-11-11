@@ -13,6 +13,7 @@ use effectcraft_project::Footage;
 pub use effectcraft_script as script;
 
 pub mod app_dirs;
+pub mod mobile;
 
 struct MediaImporter;
 
